@@ -1,0 +1,12 @@
+#ifndef MESSAGE_PROTOCO_H_
+#define MESSAGE_PROTOCO_H_
+
+#define HEADER_SIZE 5
+#define DATA_TYPE_SIZE 1
+#define DATA_LENGTH_SIZE 4
+
+#define TCP_BUFFER_SIZE 8192
+#define JSON_TYPE 1
+#define SUCCESS 1
+#define FAIL 0
+#endif // MESSAGE_PROTOCO_H_
