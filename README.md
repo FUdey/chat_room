@@ -2,4 +2,4 @@
 - use epoll
 - support room lock
 - no database
-- support remeber last room
+- support remeber last room and enter.
