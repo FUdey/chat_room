@@ -16,13 +16,12 @@ cd vcpkg
 ```
 cp ./vcpkg/installed/x64-linux/include/json /usr/local/include/
 cp ./vcpkg/installed/x64-linux/lib/libjsoncpp.a /usr/local/lib/
-
 ```
 
 - add path in /etc/profile
 ```
-    export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/lib
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 ```
 
 - run `source /etc/profile`
