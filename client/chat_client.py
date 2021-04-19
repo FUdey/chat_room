@@ -1,6 +1,8 @@
 #!python
 # -*- coding: UTF-8 -*-
 
+from tkinter import ttk
+from tkinter import scrolledtext
 from tkinter import *
 import time
 from client_service import ClientService, ctl_type
