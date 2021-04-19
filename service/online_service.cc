@@ -10,12 +10,12 @@ bool OnlineService::parseJson(string json_str, Json::Value *json_value){
 }
 
 bool OnlineService::printCurrentStat(){
-    cout<< "User:" <<endl;
+    cout<< "[DEBUG] User:" <<endl;
     for(const auto &user : user_map_){
         cout << "   "<<user.first<<"," <<user.second.id <<"," <<user.second.pin <<endl;
     }
 
-    cout<< "Room:" <<endl;
+    cout<< "[DEBUG] Room:" <<endl;
     for(const auto &room : room_map_){
         cout << "   "<<room.first<<"," <<room.second.id <<"," <<room.second.owner << ","
         << room.second.is_locked <<endl;
@@ -26,7 +26,7 @@ bool OnlineService::printCurrentStat(){
 }
 
 bool OnlineService::isUserVaild(string user_id, string pin){
-    cout << "[DEBUG]" << user_id << ","<< pin <<endl;
+    cout << "[DEBUG] user :" << user_id << ","<< pin <<endl;
     return user_map_.count(user_id) != 0 && user_map_[user_id].pin == pin;
 }
 
@@ -104,7 +104,9 @@ bool OnlineService::process(string json_request, int fd){
         if (!isUserVaild(user_id, pin)){
             return sendFailResponse(user_id, "user info not found");
         }
-        if (room_map_.count(room_id) != 0 && room_map_[room_id].is_locked == true){
+        if (room_map_.count(room_id) != 0 && 
+            room_map_[room_id].is_locked == true &&
+            room_map_[room_id].owner != user_id){
             return sendFailResponse(user_id, "room locked");
         }
 
@@ -114,7 +116,16 @@ bool OnlineService::process(string json_request, int fd){
             room_map_[room_id] = room;
         }
         room_map_[room_id].members.insert(user_id);
-        return sendSuccessResponse(user_id);
+
+        Json::Value room_map;
+        for(const auto &room_pair:room_map_){
+            Json::Value room_info;
+            room_info["id"] = room_pair.second.id;
+            room_info["owner"] = room_pair.second.owner;
+            room_info["is_locked"] = room_pair.second.is_locked;
+            room_map[room_pair.first] = room_info;
+        }
+        return sendSuccessResponse(user_id, room_map);
         break;}
     case ControlType::EXIT:{
         string user_id = json_value["user_id"].asString();
@@ -175,15 +186,15 @@ bool OnlineService::process(string json_request, int fd){
             return sendFailResponse(user_id, "user info not found");
         }
         // success
-        Json::Value room_list;
+        Json::Value room_map;
         for(const auto &room_pair:room_map_){
             Json::Value room_info;
             room_info["id"] = room_pair.second.id;
-            room_info["owner"] = room_pair.second.id;
-            room_info["is_locked"] = room_pair.second.id;
-            room_list.append(room_info);
+            room_info["owner"] = room_pair.second.owner;
+            room_info["is_locked"] = room_pair.second.is_locked;
+            room_map[room_pair.first] = room_info;
         }
-        return sendSuccessResponse(user_id, room_list);
+        return sendSuccessResponse(user_id, room_map);
         break;}
     case ControlType::SET_LOCK:{
         string user_id = json_value["user_id"].asString();

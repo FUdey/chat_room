@@ -23,11 +23,11 @@ bool MessageAdapter::getMessage(Message *msg) {
     unsigned int type = parseInt(DATA_TYPE_SIZE);
     unsigned int length = parseInt(DATA_LENGTH_SIZE);
     if(type == JSON_TYPE){
-        cout << "get json data length:" << length;
+        cout << "[DEBUG] get json data length:" << length;
         string json_data = parseContent(length);
         msg->setMessage(type, length, json_data);
     }else{
-        cout << "Unknown data type:" << type;
+        cout << "[ERROR] Unknown data type:" << type;
         cout << "   length:" << length << endl;
         int size = read(socket_fd_, buffer_, TCP_BUFFER_SIZE);
         cout << "[DEBUG] unknown content size" << size <<endl;
@@ -79,10 +79,11 @@ string MessageAdapter::parseContent(unsigned int length) {
     string data;
     while (saved_legnth < length) {
         if (isConnected() == 0) {
+            cout << "[ERROR] connection fail " << socket_fd_ <<endl;
             break;
         }
         size = read(socket_fd_, buffer_, min(buffSize, length - saved_legnth));
-        cout << "[DEBUG] size" << size <<endl;
+        cout << "[DEBUG] size:" << size <<endl;
         if (size <= 0){
             break;
         }
@@ -91,6 +92,6 @@ string MessageAdapter::parseContent(unsigned int length) {
         data += string(buffer_, size);
         
     }
-    cout << "[DEBUG]" << data <<endl;
+    cout << "[DEBUG] content:" << data <<endl;
     return data;
 }
