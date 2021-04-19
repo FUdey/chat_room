@@ -6,17 +6,19 @@
 
 using namespace std;
 
-class Message {
+class Message
+{
 private:
     unsigned int type;
     unsigned int length;
     string content;
+
 public:
     Message();
     Message(unsigned int t, unsigned int l, string c);
 
     void setMessage(unsigned int t, unsigned int l, string c);
-    
+
     unsigned int getType();
 
     unsigned int getLength();

@@ -9,7 +9,6 @@
 #include <unordered_set>
 #include <utility>
 
-
 using namespace std;
 
 /* 
@@ -18,21 +17,24 @@ using namespace std;
 class OnlineService
 {
 private:
-    enum class ControlType {
-    LOGIN = 0,
-    ENTER = 1,
-    EXIT = 2,
-    SEND = 3,
-    GET_ROOMLIST = 4,
-    SET_LOCK = 5,
-    STATUS = 6,
-    TEXT = 7,
+    enum class ControlType
+    {
+        LOGIN = 0,
+        ENTER = 1,
+        EXIT = 2,
+        SEND = 3,
+        GET_ROOMLIST = 4,
+        SET_LOCK = 5,
+        STATUS = 6,
+        TEXT = 7,
     };
-    struct UserInfo {
+    struct UserInfo
+    {
         string id;
         string pin;
     };
-    struct RoomInfo {
+    struct RoomInfo
+    {
         string id;
         string owner;
         bool is_locked;
@@ -40,7 +42,7 @@ private:
     };
     Json::Reader json_reader_;
     unordered_map<string, UserInfo> user_map_;
-    unordered_map<string, RoomInfo> room_map_; 
+    unordered_map<string, RoomInfo> room_map_;
     unordered_map<string, unique_ptr<MessageAdapter>> c2s_adapter_map_;
 
     MessageAdapter main_adapter_;
